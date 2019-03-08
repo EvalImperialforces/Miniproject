@@ -7,15 +7,16 @@
 rm(list=ls())
 graphics.off()
 library(minpack.lm)
-library(R.utils)
-library(ggplot2)
-library(plyr)
+library(compiler)
 
+enableJIT(3)
+
+# Temporarily turn off warnings
+options(warn = -1)
 
 initialtime = proc.time()[3] # Start timer to time script execution
 DF <- read.csv("../Data/Ready_to_fit.csv", header = TRUE) # Read in and observe data
 #values <- subset(DF, DF$FinalID == "MTD3375" , select = c(OriginalTraitValue, ConTemp, Kelvin))
-
 
 
 ############################################## Model Functions ######################################################
@@ -34,7 +35,7 @@ briere<- function(Temp, T0, Tm, c){
   # Function forced to be 0 above and below max and min temp
 }
 
-
+briere <- cmpfun(briere)
 
 ############################################# Schoofield Models #####################################################
 
@@ -66,6 +67,8 @@ Linear_Schoolnolow <- function(B0, E, E_h, T_h, Temp){
   
 }
 
+Linear_Schoolnolow <- cmpfun(Linear_Schoolnolow)
+  
 # Equation 6 in Schoolfield et al.,1991 (no high-temp interaction)
 Linear_Schoolnohigh <- function(B0, E, E_l, T_l, Temp){
   
@@ -73,6 +76,7 @@ Linear_Schoolnohigh <- function(B0, E, E_l, T_l, Temp){
   
 }
 
+Linear_Schoolnohigh <- cmpfun(Linear_Schoolnohigh)
 
 # Equation 4 in Schoolfield et al.,1991 (full model)
 
@@ -83,7 +87,7 @@ Linear_Schoolfull<- function(B0, E_h, E_l, E, T_l, T_h, Temp){
 }
 
 
-
+Linear_Schoolfull <- cmpfun(Linear_Schoolfull)
 
 #################### Estimating Schoolfield starting parameters #######################
 
@@ -146,6 +150,7 @@ Startvals <- function(values){
   
 #Startvals(values)
 
+Startvals <- cmpfun(Startvals)
 
 #################################################################### Fitting ########################################################################
 
@@ -157,6 +162,8 @@ Gaussian_fluctuation<- function(param_calc){
   return(new_param)
 }
 
+Gaussian_fluctuation <- cmpfun(Gaussian_fluctuation)
+
 AICc <- function(aic, K, n){
   # Calculate AICc for fitted model
   val <- pmax(K,n) # Select the highest value among k and n
@@ -166,7 +173,7 @@ AICc <- function(aic, K, n){
   return(result)
 }
 
-
+AICc <- cmpfun(AICc)
 
 cubic <- function(values){
   # Fit cubic model
@@ -177,6 +184,9 @@ cubic <- function(values){
   return(cAICc = aicc)
 }
 #cubic(values)
+
+cubic <- cmpfun(cubic)
+
 
 
 try_briere <- function(values){
@@ -197,6 +207,9 @@ try_briere <- function(values){
 }
 
 #try_briere(values)
+
+try_briere <- cmpfun(try_briere)
+
 
 
 try_lin_schoolnl <- function(values){ 
@@ -256,6 +269,8 @@ try_lin_schoolnl <- function(values){
 }
 #try_lin_schoolnl(values)
 
+try_lin_schoolnl <- cmpfun(try_lin_schoolnl)
+
 
 try_lin_schoolnh <- function(values){
   # Fit simplified Schoolfied model with low temp deactivation, S2
@@ -313,6 +328,7 @@ try_lin_schoolnh <- function(values){
 }
 #try_lin_schoolnh(values)
 
+try_lin_schoolnh <- cmpfun(try_lin_schoolnh)
 
 
 
@@ -381,14 +397,52 @@ try_lin_schoolfull <- function(values){
 
 #try_lin_schoolfull(values)
 
+try_lin_schoolfull <- cmpfun(try_lin_schoolfull)
+
+
 
 ###################################### Fit Models and Output csv ###########################################
 
 
 IDlist = unique(DF$FinalID) # List of individual IDs
 IDs <- data.frame(NULL) # Pre-allocate a list to append each individual ID to add to final table
-Mod_fit_table <- matrix(ncol = 26, nrow = length(IDlist)) # Pre-allocate output matrix
+#Mod_fit_table <- matrix(ncol = 26, nrow = length(IDlist)) # Pre-allocate output matrix
 
+# Results dataframe to be filled with vectors which are filed with model parameter values outputted from for loop 
+Results <- setNames(data.frame(matrix(ncol = 26, nrow = 1577)), c("C_AICC", "T0", "Tm", "c", "bAICC", "Snl_B0", "Snl_E", "Snl_E_h", "Snl_T_h",
+                                                                 "Snl_AICC", "Snl_Converge", "Snh_B0", "Snh_E", "Snh_E_l", "Snh_T_l",
+                                                                 "Snh_AICC", "Snh_Converge", "Full_B0", "Full_E_h", "Full_E_l", "Full_E",
+                                                                 "Full_T_l", "Full_T_h", "Full_AICC","Full_Converge","Sample_size"))
+
+
+# Pre-allocate empty vectors whose names and contents will make up the Results dataframe
+
+C_AICC <- c()
+T0 <- c() 
+Tm <- c() 
+c <- c() 
+bAICC <- c()
+Snl_B0 <- c()
+Snl_E <- c() 
+Snl_E_h <- c() 
+Snl_T_h <- c() 
+Snl_AICC <- c() 
+Snl_Converge <- c()
+Snh_B0 <- c() 
+Snh_E <- c() 
+Snh_E_l <- c() 
+Snh_T_l <- c() 
+Snh_AICC <- c() 
+Snh_Converge <- c()
+Full_B0 <- c()
+Full_E_h <- c() 
+Full_E_l <- c() 
+Full_E <- c()
+Full_T_l <- c()
+Full_T_h <- c()
+Full_AICC <- c()
+Full_Converge <- c()
+Sample_size <-c()
 
 #initialtime = proc.time()[3]
 for (i in (1:length(IDlist))){
@@ -396,86 +450,54 @@ for (i in (1:length(IDlist))){
   IDs[i,1] <- subset_id # Append ID to list
   values = subset(DF, DF$FinalID == subset_id, select = c("OriginalTraitValue", "Kelvin", "ConTemp")) # Subset out_table by ID in unique list
   # Run cubic
-  Mod_fit_table[i,1] <- cubic(values)
+  C_AICC <- cubic(values)
   # Run briere and append to matrix
   model2<- try_briere(values)
-  Mod_fit_table[i,2] <- model2$T0
-  Mod_fit_table[i,3] <- model2$Tm
-  Mod_fit_table[i,4] <- model2$c
-  Mod_fit_table[i,5] <- model2$bAICc
+  T0 <- model2$T0
+  Tm <- model2$Tm
+  c <- model2$c
+  bAICC <- model2$bAICc
   # Run Schoolfield models and append to matrix
   # Schoolnolow (S1)
   model3 <- try_lin_schoolnl(values)
-  Mod_fit_table[i,6] <- model3$B0
-  Mod_fit_table[i,7] <- model3$E
-  Mod_fit_table[i,8] <- model3$E_h
-  Mod_fit_table[i,9] <- model3$T_h
-  Mod_fit_table[i,10] <- model3$Lin_Snl_AICc
-  Mod_fit_table[i,11] <- model3$Lin_schoolnl_convergence
+  Snl_B0 <- model3$B0
+  Snl_E <- model3$E
+  Snl_E_h <- model3$E_h
+  Snl_T_h <- model3$T_h
+  Snl_AICC<- model3$Lin_Snl_AICc
+  Snl_Converge <- model3$Lin_schoolnl_convergence
   #Schoolnohigh (S2)
   model4 <- try_lin_schoolnh(values)
-  Mod_fit_table[i,12] <- model4$B0
-  Mod_fit_table[i,13] <- model4$E
-  Mod_fit_table[i,14] <- model4$E_l
-  Mod_fit_table[i,15] <- model4$T_l
-  Mod_fit_table[i,16] <- model4$Lin_Snh_AICc
-  Mod_fit_table[i,17] <- model4$Lin_schoolnh_convergence
+  Snh_B0 <- model4$B0
+  Snh_E <- model4$E
+  Snh_E_l <- model4$E_l
+  Snh_T_l <- model4$T_l
+  Snh_AICC <- model4$Lin_Snh_AICc
+  Snh_Converge <- model4$Lin_schoolnh_convergence
   #Schoolfull (S3)
   model5 <- try_lin_schoolfull(values)
-  Mod_fit_table[i,18] <- model5$B0
-  Mod_fit_table[i,19] <- model5$E_h
-  Mod_fit_table[i,20] <- model5$E_l
-  Mod_fit_table[i,21] <- model5$E
-  Mod_fit_table[i,22] <- model5$T_l
-  Mod_fit_table[i,23] <- model5$T_h
-  Mod_fit_table[i,24] <- model5$Lin_Sfull_AICc
-  Mod_fit_table[i,25] <- model5$Lin_Sfull_convergence
+  Full_B0 <- model5$B0
+  Full_E_h <- model5$E_h
+  Full_E_l <- model5$E_l
+  Full_E <- model5$E
+  Full_T_l <- model5$T_l
+  Full_T_h <- model5$T_h
+  Full_AICC <- model5$Lin_Sfull_AICc
+  Full_Converge <- model5$Lin_Sfull_convergence
   # Number of datapoints
-  Mod_fit_table[i,26] <- length(values$OriginalTraitValue)
+  Sample_size <- length(values$OriginalTraitValue)
+  # Output results into vectors at index i
+  Results[i,] <- c(C_AICC, T0, Tm, c, bAICC, Snl_B0, Snl_E, Snl_E_h, Snl_T_h,
+                   Snl_AICC, Snl_Converge, Snh_B0, Snh_E, Snh_E_l, Snh_T_l,
+                   Snh_AICC, Snh_Converge, Full_B0, Full_E_h, Full_E_l, Full_E,
+                   Full_T_l, Full_T_h, Full_AICC, Full_Converge, Sample_size)
 }
 
-#finish_time = proc.time()[3] - initialtime  
-
-#Mod_fit <- list()
-
-#call_models <- function (values){
-#  output = list()
-#  output[1] <- list(cubic(values))
-#  output[2]<- list(try_briere(values))
-#  output[3] <- list(try_lin_schoolnl(values))
-#  output[4] <- list(try_lin_schoolnh(values))
-#  output[5] <- list(try_lin_schoolfull(values))
-  
-#  return(output)
- 
-#}
-#call_models(values)
-
-#finallist <- list()
-
-#initialtime = proc.time()[3]
-#sapply(IDlist, function(id) {
-#  values <- subset(DF, DF$FinalID == id, select = c("OriginalTraitValue", "Kelvin", "ConTemp")) # Subset out_table by ID in unique list
-#  row_out <- call_models(values)
-#  out <- list.append(finallist, row_out)
-#  do.call(rbind, out)
-#  }
-#)
 
 
-#finish_time = proc.time()[3] - initialtime  
-  
-  
-  
-#output_table <- as.data.frame(t(as.data.frame(finallist))) 
-
-
-Mod_fit_table <- as.data.frame(Mod_fit_table)
-colnames(Mod_fit_table) <- c("C_AICC", "T0", "Tm", "c", "bAICC",
-                         "Snl_B0", "Snl_E", "Snl_E_h", "Snl_T_h", "Snl_AICC", "Snl_Converge",
-                         "Snh_B0", "Snh_E", "Snh_E_l", "Snh_T_l", "Snh_AICC", "Snh_Converge",
-                         "Full_B0", "Full_E_h", "Full_E_l", "Full_E", "Full_T_l", "Full_T_h", "Full_AICC", "Full_Converge", "Sample_size")
-Out_table<- cbind(IDs, Mod_fit_table) # Append infividual IDs to final dataframe
+Out_table<- cbind(IDs, Results) # Append infividual IDs to final dataframe
 write.csv(Out_table, file = "../Data/Model_Results.csv")
+
+
 finish_time = (proc.time()[3] - initialtime)/60  
 print(paste("Script took", finish_time, "minutes to run"))

@@ -3,3 +3,11 @@ Results/*
 
 # exception to the rule
 !Results/.gitkeep 
+
+*.aux
+*.toc
+*.blg
+*.bbl
+*.log
+*.out
+*~

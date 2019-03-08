@@ -8,14 +8,21 @@ rm(list=ls())
 graphics.off()
 library(ggplot2)
 library(minpack.lm)
-library(dplyr)
 library(plyr)
-library(gridExtra)
+suppressMessages(library(dplyr))
+suppressMessages(library(gridExtra))
 library(xtable)
 library(RColorBrewer)
 library(stringr)
-library(Hmisc)
+suppressMessages(library(Hmisc))
 library(reshape2)
+library(compiler)
+
+enableJIT(3)
+
+
+# Temporarily turn off warnings
+options(warn = -1)
 
 initialtime = proc.time()[3]
 
@@ -35,6 +42,7 @@ briere<- function(Temp, T0, Tm, c){
   # Function forced to be 0 above and below max and min temp
 }
 
+briere <- cmpfun(briere)
 
 # Equation 7 in Schoolfield et al.,1991 (no low-temp inactivation)
 
@@ -45,12 +53,18 @@ Linear_Schoolnolow <- function(B0, E, E_h, T_h, Temp){
   
 }
 
+Linear_Schoolnolow <- cmpfun(Linear_Schoolnolow)
+
+
 # Equation 6 in Schoolfield et al.,1991 (no high-temp interaction)
+
 Linear_Schoolnohigh <- function(B0, E, E_l, T_l, Temp){
   
   return(B0 * exp((-E/k)*((1/Temp) - (1/278.15)))/(1 + exp(E_l/k * ((1/T_l) - (1 / Temp)))))
   
 }
+
+Linear_Schoolnohigh <- cmpfun(Linear_Schoolnohigh)
 
 
 # Equation 4 in Schoolfield et al.,1991 (full model)
@@ -62,6 +76,7 @@ Linear_Schoolfull<- function(B0, E_h, E_l, E, T_l, T_h, Temp){
 }
 
 
+Linear_Schoolfull <- cmpfun(Linear_Schoolfull)
 
 
 ################################################## Plot fits #######################################################
@@ -76,6 +91,9 @@ plot_cubic <- function(traits_data){
   return(Model_data_c)
 }
 
+plot_cubic <- cmpfun(plot_cubic)
+
+
 plot_briere <- function(best_params, new_data){
   # Predict trait values according to the briere model from sequence temperature data
   pred.b <- briere(new_data, best_params$T0, best_params$Tm, best_params$c) # Fit sequence data to model
@@ -83,12 +101,17 @@ plot_briere <- function(best_params, new_data){
   return(Model_data_b)
 }
 
+plot_briere <- cmpfun(plot_briere)
+
+
 plot_school_nl <- function(best_params, new_data, new_data_school){
   # Predict trait values according to the schoolfield high temp deactivation model (S1) from sequence temperature data
   snl.fit <- Linear_Schoolnolow(best_params$Snl_B0, best_params$Snl_E, best_params$Snl_E_h, best_params$Snl_T_h, new_data_school) # Fit sequence data to model
   Model_data_snl <- data.frame(TraitValue = snl.fit, Temperature = new_data) # Output dataframe of temperatures and predicted trait values
   return(Model_data_snl)
 }
+
+plot_school_nl <- cmpfun(plot_school_nl)
 
 
 plot_school_nh <- function(best_params, new_data, new_data_school){
@@ -98,6 +121,8 @@ plot_school_nh <- function(best_params, new_data, new_data_school){
   return(Model_data_snh)
 }
 
+plot_school_nh <- cmpfun(plot_school_nh)
+
 
 plot_school_full<- function(best_params, new_data, new_data_school){
   # Predict trait values according to the full schoolfield model (S3) from sequence temperature data
@@ -106,8 +131,7 @@ plot_school_full<- function(best_params, new_data, new_data_school){
   return(Model_data_full)
 }
 
-#traits_data <- subset(Data, Data$FinalID == "MTD2100", select = c("OriginalTraitValue", "ConTemp", "Kelvin"))
-#best_params <- subset(Models, Models$V1 == "MTD2100")
+plot_school_full <- cmpfun(plot_school_full)
 
 
 Build_plot <- function(id){
@@ -133,9 +157,12 @@ Build_plot <- function(id){
   return(fit_plot) # Output plot created
 }
 
+Build_plot <- cmpfun(Build_plot)
+
+
 IDlist = unique(Models$V1) # Unique list of IDs
 for (i in (1:length(IDlist))){
-  # Plot created using Build_plot fuction and saved in results folder for each ID
+  #Plot created using Build_plot fuction and saved in results folder for each ID
   ID <- IDlist[i]
   pdf(file = paste("../Results/Models_fitted/", ID,".pdf", sep = ""))
   print(Build_plot(ID))
@@ -143,34 +170,31 @@ for (i in (1:length(IDlist))){
 }
   
   
-print("All plots fitted")
-finish_time1 = (proc.time()[3] - initialtime)/60  
-print(paste("Plots took", finish_time1, "minutes to run"))
-
 
 ##################################################### Analysis #############################################################
 
 
 ######### Range of sample sizes per ID in dataset ##########
 
-Observations <- as.data.frame(count(Data, vars = "FinalID")) # Number of observations per ID
+Observations <- as.data.frame(count(Data, FinalID)) # Number of observations per ID
 #quantile(Observations[,2], c(.25, .50, .75 ))
 #min(Observations[,2])
 #max(Observations[,2])
 #median(Observations[,2])
 
-df <- Observations %>% group_by(freq) %>% tally() # Tally the number of observations for each ID
+df <- Observations %>% group_by(n) %>% count() # Tally the number of observations for each ID
 
 
 # Create and save a boxplot to illustrate range of sample sizes for each TPC
 pdf(file = paste("../Results/Samples_boxplot.pdf"))
-print(ggplot(df, aes(x = n, y = freq, group = 1)) + xlab("Frequency") + ylab("Sample Size") + 
+print(ggplot(df, aes(x = n, y = nn, group = 1)) + xlab("Frequency") + ylab("Sample Size") + 
   geom_boxplot()+ 
-  geom_text(data = subset(df, freq > 131), 
-            mapping = aes(label = freq),
-            nudge_x = 140, size = 2.5, check_overlap = T) +
+  geom_text(data = subset(df, nn > 131), 
+            mapping = aes(label = nn),
+            nudge_x = 240, size = 5, check_overlap = T) +
+    theme_minimal(base_size = 15) +
   theme_light())
-dev.off()
+invisible(dev.off())
 
 
 ######### Starting params and AICc for Fig. 1 ################
@@ -194,7 +218,6 @@ print.xtable(table2, type = "latex", floating = F, caption.placement = "top", fi
 
 
 ################## Model Performance #######################
-
 
 ############## Summary of fits  ################
 
@@ -239,10 +262,10 @@ delta_table <- data.frame(cbind(Model,less_2, two_four, four_seven, seven_ten, t
 colnames(delta_table) <- c("Model", "$\\Delta < 2$", "$2 < \\Delta \\leq 4$", "$4 < \\Delta \\leq 7$", "$ 7 < \\Delta \\leq 10$", "$\\Delta > 10$") # Column names in LaTeX syntax
 
 # Output created table as .tex file
-table3 <- xtable(delta_table)
+table3 <- xtable(delta_table, type ="latex")
 align(table3) <- "lc|ccccc"
-print.xtable(table3, type = "latex", floating = F, caption.placement = "top", file = "../Results/Table3.tex",
-             include.rownames = F, sanitize.text.function = function(x){x}, width = 6)
+print(table3, floating = F, caption.placement = "top", file = "../Results/Table3.tex",
+             include.rownames = F, scalebox = '0.6', sanitize.text.function = function(x){x}, width = 6)
 
 ################ AICC Weightage #####################
 
@@ -250,7 +273,7 @@ delta_weight <- na.omit(delta_mat) # Omit NAs from weightage analysis
   
 Weight1<- function(id, col){
 # Calculate weight for each model in row i
-  return(exp(-(delta_weight[i,col])/2))
+  return(exp(-(delta_weight[id,col])/2))
 }
 
 Weight2 <- function(weight, sum_weight){
@@ -258,7 +281,7 @@ Weight2 <- function(weight, sum_weight){
   return(weight/sum_weight)
 }
 weightages <- matrix(ncol = 5, nrow = length(delta_weight[,1])) # Weightage matrix
-for(i in 1:length(delta_weight)){
+for(i in 1:length(delta_weight[,1])){
   # Calculate weightage of each AICC
   # Calculate independent weight for each model
   c <- Weight1(i, 1)
@@ -277,9 +300,9 @@ for(i in 1:length(delta_weight)){
 
 weightages <- as.data.frame(weightages)
 colnames(weightages) <- c("Cubic", "Briere", "S1", "S2", "S3")
-melt_weightages <- melt(weightages) # m
+melt_weightages <- melt(weightages, measure.vars = c("Cubic", "Briere", "S1", "S2", "S3")) # Melt dataframe for figure
 
-dev.new()
+
 # Boxplot of AICC distributions
 pdf(file = paste("../Results/Fig_5.pdf"))
 print(ggplot(melt_weightages, aes(factor(variable), value, color = variable)) + 
@@ -287,7 +310,7 @@ print(ggplot(melt_weightages, aes(factor(variable), value, color = variable)) +
   xlab("Models") + ylab ("Akaike Weight") +
   scale_color_brewer(palette="Dark2") +
   theme_minimal(base_size = 15))
-dev.off()
+invisible(dev.off())
 
 
 ########## Model performance bar plots ##############
@@ -310,12 +333,12 @@ print(ggplot(fig2, aes(x = AICC, y = Count, fill = AICC)) +
   geom_text(aes(label = Count), vjust=1.6, color="white", size=3.5) +
   scale_fill_brewer(palette = "Dark2") +
   theme_minimal(base_size = 16))
-dev.off()
+invisible(dev.off())
 
 ### Compare traits
 
 aicc_df <- data.frame(aicc_table) # Best model per ID
-traits <- unique(Data %>% group_by(FinalID)  %>% select(StandardisedTraitName)) # For each ID select it's Trait name
+traits <- unique(Data %>% group_by(FinalID) %>% select(StandardisedTraitName))  # For each ID select it's Trait name
 trait_type <- cbind(aicc_df, traits[,2]) # Trait type per best selected model
 # Rename traits as either respiration, photosynthesis, growth
 #trait_type$StandardisedTraitName <- gsub("^.?photosynth", "P", trait_type$StandardisedTraitName)
@@ -344,7 +367,7 @@ print(ggplot(trait_type, aes(x = StandardisedTraitName, fill = best_mod)) +
   scale_fill_brewer("Best Model", labels = c("Briere", "Cubic", "S3", "S2", "S1"), palette = "Dark2") +
   theme_minimal(base_size = 18) +
   theme(axis.text.x = element_blank())) 
-dev.off()
+invisible(dev.off())
 
 ### Compare Kingdoms
 King <- unique(Data %>% group_by(FinalID)  %>% select(ConKingdom)) # For each ID select consumer Kingdom
@@ -363,11 +386,30 @@ ggplot(Kingdom, aes(x = ConKingdom, fill = best_mod)) +
   theme_minimal(base_size = 18) +
   theme(axis.text.x = element_blank())
 ggsave(filename = paste("../Results/Fig_4.pdf"), width = 300, height = 150, units = "mm")
-dev.off()
+invisible(dev.off())
 
 # Calculate mean activation energies
 #E_vals <- as.data.frame(Models[,grepl("E", names(Models))]) # Create a matrix of all aicc values
 #Average <- apply(na.omit(E_vals), 2, function(x) mean(x))
+
+# Appendix 2
+aicc_tally <- cbind(Observations, aicc) # Number of observations per ID and selected score
+aicc_tally <- na.omit(aicc_tally) # Omit NA's
+aicc_tally <- aicc_tally[(aicc_tally$n < 13),] # Remove values greater than 13
+
+# Print plot
+pdf(file = paste("../Results/Appendix2.pdf"))
+print(ggplot(data = aicc_tally) + 
+  ylab("AICC score") +
+  xlab("Sample Size") +
+  geom_point(aes(x = n, y = C_AICC, colour = "Cubic")) +
+  geom_point(aes(x = n, y = bAICC, color = "Briere")) +
+  geom_point(aes(x = n, y = Snl_AICC, color = "S1")) +
+  geom_point(aes(x = n, y = Snh_AICC, color = "S2")) +
+  geom_point(aes(x = n, y = Full_AICC, color = "S3")) +
+  labs(color = "Models") +
+  theme_minimal(base_size = 16))
+invisible(dev.off())
 
 finish_time2 = (proc.time()[3] - initialtime)/60  
 print(paste("Script took", finish_time2, "minutes to run"))

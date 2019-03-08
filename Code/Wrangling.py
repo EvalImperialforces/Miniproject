@@ -8,7 +8,7 @@ __licence__ = 'CMEE Assessment'
 import pandas as pd
 import numpy as np
 
-f = pd.read_csv('../Data/BioTraits.csv') # Import
+f = pd.read_csv('../Data/BioTraits.csv', low_memory = False) # Import
 
 f = f[f['OriginalTraitValue'] > 0] # Remove all Trait values that are less that 0
 f = f[pd.notnull(f['OriginalTraitValue'])] # Remove NA's in all Trait values

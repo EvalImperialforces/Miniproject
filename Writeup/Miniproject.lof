@@ -1,0 +1,7 @@
+\contentsline {figure}{\numberline {1}{\ignorespaces Two typical TPCs demonstrating all 5 models fit to observed data. a) All models captured data well, particularly Briere. b) Only the mechanistic models, particularly S1 and S3, come close to an optimal fit.\relax }}{10}
+\contentsline {figure}{\numberline {2}{\ignorespaces Number of times each model was selected as the best model per TPC, according to \(\Delta AIC_c\) score, within the entire dataset (n = 1577).\relax }}{11}
+\contentsline {figure}{\numberline {3}{\ignorespaces Proportion of best models selected for each trait type summarized into relative categories; Photosynthesis, Growth and Respiration. Best model was selected according to \(\Delta AIC_c\) score, within the entire dataset (n = 1577).\relax }}{12}
+\contentsline {figure}{\numberline {4}{\ignorespaces Proportion of best models selected for each Kingdom of consumers. Best model was selected according to \(\Delta AIC_c\) score, among consumers that had a Kingdom specified (n = 1576).\relax }}{13}
+\contentsline {figure}{\numberline {5}{\ignorespaces Distribution of Akaike weights for each model. Weightages were calculated for TPCs in which all models converged (n = 1156).\relax }}{14}
+\contentsline {figure}{\numberline {1}{\ignorespaces Boxlplot illustrating the range of observations per Thermal Performance Curve. Outliers are labelled\relax }}{21}
+\contentsline {figure}{\numberline {2}{\ignorespaces Plot of \(AIC_c\) scores with sample size, coloured according to model type\relax }}{22}

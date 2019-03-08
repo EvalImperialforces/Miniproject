@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[11pt]{article}
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{gensymb}
@@ -32,7 +32,7 @@
 		{\Large Eva Linehan\par}
 		\vspace{2cm}
 		
-		\includegraphics[width=0.4\textwidth]{crest.png}
+		\includegraphics[width=0.4\textwidth]{../Writeup/crest.png}
 		
 		\vspace{1.7cm}
 		
@@ -43,7 +43,7 @@
 		
 		Imperial College London\\
 		March 2019\\
-		WC 1924
+		WC 3091
 	%\end{center}
 \end{titlepage}
 
@@ -55,22 +55,25 @@
 \newpage
 \begin{linenumbers}
 \section{Abstract}
+The effect of temperature on biological processes permeates across all systems and levels of organization. To understand this effect, the thermal response of metabolic traits is often described using temperature performance curves (TPCs). In this study, 1,577 TPCs were analyzed across a large dataset of 397 species within 8 Kingdoms demonstrating 18 different standardized trait values to describe respiration, growth and photosynthesis. Mechanistic and phenomenological models were fit to the data and compared to investigate which model best described the observed effect of temperature on trait performance. Overall the cubic model was identified as having the best fit, converging to all data and most frequently being selected as the best model for each TPC. The high temperature deactivation Schoolfield model was the best performing mechanistic model with the highest parsimony among the selected set of models, facilitating the biological interpretation of results.
+
+
 \section{Introduction}
-It has been argued that life is a response to the thermodynamic requirements of dissipating systems, providing criteria for evaluating growth and development across a range of biological systems \cite{Schneider2007OrderFD}. The importance of thermodynamic imperatives in fluctuating environments and in ecosystem maintenance cannot be understated in this present climate. The most recent IPCC 2018 report \cite{IPCC2018} identified the investigation of thermal responses across terrestrial, coastal and oceanic ecosystems as crucial gap in our knowledge and in the understanding of mechanistic processes by which organisms react to Earth's rapidly changing thermal landscape. To observe the profound effects of temperature on biological functions at all levels of organization, temperature performance curves are commonly used.
+It has been argued that life is a response to the thermodynamic requirements of dissipating systems, providing criteria for evaluating growth and development across a range of biological systems \cite{Schneider2007OrderFD}. The importance of thermodynamic imperatives in fluctuating environments and in ecosystem maintenance cannot be understated in this present climate. The most recent IPCC 2018 report \cite{IPCC2018} identified the investigation of thermal responses across terrestrial, coastal and oceanic ecosystems as a crucial gap in our knowledge. To understand these thermal responses would be to understand the underlying mechanistic processes by which organisms react to Earth's rapidly changing thermal landscape. To observe the profound effects of temperature on biological functions at all levels of organization, temperature performance curves are commonly used.
 
  
 Temperature performance curves (TPCs) incorporate temperature tolerance and temperature-dependent effects on performance from the whole-organism level, including growth and metabolic rate, to the underlying physiological level which include functions such as enzyme activity \cite{10.1093/icb/icr097}\cite{doi:10.1890/12-2060.1}. The effects of temperature on performance traits, illustrated by TPCs, follow a general trend
-with three distinct phases: (1) a growth phase with trait performance increasing with temperature; (2) a peak or thermal optimum at the highest trait value; followed by (3) a sharp decline at higher temperatures \cite{Schulte2015TheEO}.This unimodal, left skewed distribution has been described by both phenomenological and mechanistic models in order to capture the general features observed for trait values across a range of temperatures. There is currently no one general model favoured over another which may be explained by the fundamental differences between biological responses among taxa \cite{pub.1026914980}\cite{doi:10.1002/ece3.3576}. An ideal generalized model may be hard to derive as although complex models often perform poorly in relation to a more simple counterpart, they can be improved when wider temperature ranges are applied \cite{Quinn2017ACR}. Phenomenological models, often used to predict thermal responses, lack any meaningful parameter interpretation and as a result are flexible tools that can be used to model any species or fitness component \cite{Martin2017PhenomenologicalVB}. The unknown suitability for such models in different conditions may lead to underestimation. In contrast, mechanistic models are used to explain the processes underlying phenomena in emprical data and are established on a theoretical basis. The mechanistic basis for model predictions provides a useful criterion in a range of applications, such as conservation assessments \cite{doi:10.1098/rsbl.2005.0417}. 
+with three distinct phases: (1) a growth phase with trait performance increasing with temperature; (2) a peak or thermal optimum at the highest trait value; followed by (3) a sharp decline at higher temperatures \cite{Schulte2015}. This unimodal, left skewed distribution has been described by both phenomenological and mechanistic models in order to capture the general features observed for trait values across a range of temperatures. There is currently no one general model favoured over another which may be explained by the fundamental differences between biological responses among taxa \cite{pub.1026914980}\cite{doi:10.1002/ece3.3576}. An ideal generalized model may be hard to derive as although complex models often perform poorly in relation to a more simple counterpart, they can be improved when wider temperature ranges are applied \cite{Quinn2017ACR}. Phenomenological models, often used to predict thermal responses, lack any meaningful parameter interpretation and as a result are flexible tools that can be used to model any species or fitness component \cite{Martin2017PhenomenologicalVB}. The unknown suitability for such models in different conditions may lead to underestimation. In contrast, mechanistic models are used to explain the processes underlying phenomena in emprical data and are established on a theoretical basis. The mechanistic basis for model predictions provides a useful criterion in a range of applications, such as conservation assessments \cite{doi:10.1098/rsbl.2005.0417}. 
 
-Both phenomenological and mechanistic models were compared in this study to analyze the effect of temperature on trait performance. Phenomenological models include; a cubic polynomial which is unimodal and asymmetrical in shape as well as Briere's model that accounts for upper and lower temperature thresholds \cite{10.1093/ee/28.1.22}. The mechanistic models chosen were variations of the Schoolfield-Sharpe model that consider  reversible enzyme denaturation at high (S1), low temperatures (S2) or both (S3).
-Formulated from the Sharpe and DeMichele model which was unsuitable for non-linear regression, three new thermodynamic parameters were introduced which have a more intuitive biological interpretation: (1) a development rate at a reference temperature that assumes no enzyme activity; (2) a temperature at which enzyme activity is half low temperature inactive; and (3) a temperature at which enzyme activity is half high temperature inactive. \cite{SCHOOLFIELD1981719}.
+Both phenomenological and mechanistic models were compared in this study to analyze the effect of temperature on trait performance. Phenomenological models include; a cubic polynomial which is unimodal and asymmetrical in shape as well as Briere's model that accounts for upper and lower temperature thresholds \cite{10.1093/ee/28.1.22}. The mechanistic models chosen were variations of the Schoolfield-Sharpe model that consider  reversible enzyme denaturation at high temperatures (S1), low temperatures (S2) or both (S3).
+Formulated from the Sharpe and DeMichele model which was unsuitable for non-linear regression, three new thermodynamic parameters were introduced which have a more intuitive biological interpretation: (1) a development rate at a reference temperature that assumes no enzyme activity; (2) a temperature at which enzyme activity is half low temperature inactive; and (3) a temperature at which enzyme activity is half high temperature inactive. \cite{Schoolfield1981}.
 
- Relatvely few studies have measured performance at a large scale to distinguish between underlying shpes and phenomena \cite{pub.1026914980} \cite{Dowd1956}. The purpose of this study was to conduct a broad-scale comparative analysis of the performance of phenomenological and mechanistic models on thermal response data.
+ Relatively few studies have measured performance at a large scale to distinguish between underlying shpes and phenomena \cite{pub.1026914980} \cite{Dowd1956}. The purpose of this study was to conduct a broad-scale comparative analysis of the performance of phenomenological and mechanistic models on thermal response data.
 
  \section{Methods}
  \subsection{Data}
- Metabolic trait data was derived from the BioTraits dataset accumulated by Dell \textit{et al.,} (2011) . This included approximately 2,445 intraspecific temperature responses for growth, respiration and photosynthesis rates in plants and bacteria from terrestrial and aquatic environments. 
- TPCs with positive and non zero trait values were selected and those with 6 or more observations were included in the analysis. A minimum of 6 data points was chosen in order to successfully fit the full Schoolfield model which requires at least 6 observations. A total of 1,577 TPCs were fitted with both phenomenological and mechanistic models to assess the effect of temperature on biological trait values. The data for analysis were subsetted and exported using Python 3.6.7, the pandas and numpy libraries.
+ Metabolic trait data was derived from the BioTraits dataset accumulated by Dell \textit{et al.,} (2013) . This included intraspecific temperature responses for growth, respiration and photosynthesis rates in plants and bacteria from terrestrial and aquatic environments. 
+ TPCs with positive and non zero trait values were selected and those with 6 or more observations were included in the analysis. A minimum of 6 data points was chosen in order to successfully fit the full Schoolfield model which requires at least 6 observations. A total of 1,577 TPCs were fitted with both phenomenological and mechanistic models to assess the effect of temperature on biological trait values. The data for analysis were subsetted and exported using Python 3.6.7.
  
  \subsection{Model fitting}
   \subsubsection{Phenomenological Models}
@@ -82,7 +85,7 @@ Two different phenomenological models were used in this study. A generic cubic p
 
 \(\beta\), is the trait of interest (respiration, growth or photosynthesis), \(T\) is temperature (\degree C) and \(\beta0\), \(\beta1\) , \(\beta2\)  and \(\beta3\) are coefficients of the function lacking any mechanistic interpretation.  
 
-Briere's model is a 3 parameter model that describes the non-linear relationship of developmental rates for insect species (Briere \textit et al., 1999). This empirical function was used as it accounts for upper and lower temperature thresholds, asymmetry about the optimum temperature, presence of an inflection point and a sharp decline in developmental rate above optimum temperature. 
+Briere's model is a 3 parameter model that describes the non-linear relationship of developmental rates for insect species \cite{10.1093/ee/28.1.22}. This empirical function accounts for upper and lower temperature thresholds, asymmetry about the optimum temperature, presence of an inflection point and a sharp decline in developmental rate above optimum temperature. 
 
 \begin{equation}
 \beta = \beta_0 T (T-T_0) \sqrt{T_m-T}\tag{2}
@@ -91,15 +94,16 @@ Briere's model is a 3 parameter model that describes the non-linear relationship
 \(\beta\) represents the trait value where \(T_0\) is the minimum feasible temperature (\degree C) and \(T_m\) is the maximum temperature (\degree C) that a trait can withstand before going to 0 \degree C. \(\beta_0\) is the normalization constant and was initialized as 1 for TPC fitting. \(T_0\) was estimated as the minimum temperature and \(T_m\) as the maximum temperature recorded for each TPC.
 
 \subsubsection{Mechanistic Models}
-The mechanistic models fitted were variations of the Schoolfield model based on thermodynamics and enzyme kinetics \cite{schoolfield1981non}. The full model contains 6 parameters including both high and low deactivation energy.
+The mechanistic models fitted were variations of the Schoolfield model based on thermodynamics and enzyme kinetics \cite{Schoolfield1981}. The full model contains 6 parameters including both high and low deactivation energy.
 
 \begin{equation}
 \beta = \frac{\beta_0 e^{\frac{-E}{k} (\frac{1}{T} - \frac{1}{283.15})}}
 { 1 + e^{\frac{E_l}{k} (\frac{1}{T_l} - \frac{1}{T})} + 
 	e^{\frac{E_h}{k} (\frac{1}{T_h} - \frac{1}{T})}}\tag{3}
 \end{equation}
+\vspace{0.1cm}
 
-k is the Boltzmann constant (8.617×10−5 eV ⋅ K−1).  \(\beta\) represents the value of the trait at a given temperature (T) in Kelvin (K = ∘C + 273.15). \(\beta_0\) is the trait value that corresponded to the temperature closest to 278.15 K (5\degree C), controlling the vertical offset of the curve. \(E\) is  the activation energy (eV) and controls the rise of the curve up to the peak in the “normal operating range” for the enzyme. \(E_l\) is the enzyme's low-temperature de-activation energy (eV) which controls the behavior of the enzyme (and the curve) at very low temperatures while \(E_h\) is the enzyme's high-temperature de-activation energy (eV), controlling the behavior of the enzyme at very high temperatures. \(T_l\) is the temperature at which the enzyme is 50\% low-temperature deactivated and \(T_h\)  is the temperature at which the enzyme is 50\% high-temperature deactivated. The simplified models are similar to the full model disregarding either high temperature (4) or low temperature deactivation (5):
+k is the Boltzmann constant (8.617 x $10^-5$ eV x \(K\) - 1).  \(\beta\) represents the value of the trait at a given temperature (T) in Kelvin (K = \degree C + 273.15). \(\beta_0\) is the trait value that corresponded to the temperature closest to 278.15 K (5\degree C), controlling the vertical offset of the curve. \(E\) is  the activation energy (eV) and controls the rise of the curve up to the peak in the "normal operating range" for the enzyme. \(E_l\) is the enzyme's low-temperature de-activation energy (eV) which controls the behavior of the enzyme (and the curve) at very low temperatures while \(E_h\) is the enzyme's high-temperature de-activation energy (eV), controlling the behavior of the enzyme at very high temperatures. \(T_l\) is the temperature at which the enzyme is 50\% low-temperature deactivated and \(T_h\)  is the temperature at which the enzyme is 50\% high-temperature deactivated. The simplified models are similar to the full model disregarding either high temperature (4) or low temperature deactivation (5):
 
 \begin{equation}
 \beta = \frac{\beta_0 e^{\frac{-E}{k} (\frac{1}{T} - \frac{1}{283.15})}}
@@ -111,10 +115,10 @@ k is the Boltzmann constant (8.617×10−5 eV ⋅ K−1).  \(\beta\) represents 
 { 1  + e^{\frac{E_h}{k} (\frac{1}{T_h} - \frac{1}{T})}}\tag{5}
 \end{equation}
 
+\vspace{0.1cm}
+\(\beta_0\) was initialized as the untransformed trait value corresponding to the temperature closest to 278.15 K (5\degree C). From here, each TPC was divided into two sections either side of the peak. The peak was calculated as the highest trait value and it's corresponding temperature. The first section, or left hand side of the curve, comprised of temperatures and their corresponding trait values below the peak while the second section, or right hand side of the curve, contained values above the peak. For each section, temperature data were multiplied by 1/k and trait values logged. A linear regression was then fit to the data and starting parameter estimates were calculated. For the left hand side of the curve, below the peak, \(E\) was calculated as the absolute value of the slope of the line. \(T_l\) was recorded as the temperature (transformed from 1/kt to K) from which the mean logged trait value was taken and the 1/kt value calculated from the regression line. \(E_l\) was assumed to be half the value of \(E\). For the left hand side of the curve, below the peak, \(E_h \) was recorded as the slope of the line and \(T_h\) was estimated similar to \(T_l\). For cases in which above or below peak data contained 1 point or were absent, \(E\) was initialized as the reported mean value of 0.65 \cite{pub.1026914980} and \(E_h \) as 3 times \(E\) to reflect a sharper slope as trait values decline with increasing temperature. \(T_l\) was estimated as the lowest tempertaure and \(T_h\) as the maximum temperature.
 
-\(\beta_0\) was initialized as the untransformed trait value corresponding to the temperature closest to 278.15 K (5\degree C). From here, each TPC was divided into two sections either side of the peak. The peak was calculated as the highest trait value and it's corresponding temperature. The first section, or left hand side of the curve, comprised of temperatures and their corresponding trait values below the peak while the second section, or right hand side of the curve, contained values above the peak. For each section, temperature data were multiplied by 1/k and trait values logged. A linear regression was then fit to the data and starting parameter estimates were calculated. For the left hand side of the curve, below the peak, \(E\) was calculated as the absolute value of the slope of the line. \(T_l\) was recorded as the temperature (transformed from 1/kt to K) from which the mean logged trait value was taken and the 1/kt value calculated from the regression line. \(E_l\) was assumed to be half the value of \(E\). For the left hand side of the curve, below the peak, \(E_h \) was recorded as the slope of the line and \(T_h\) was estimated similar to \(T_l\). For cases in which above or below peak data contained 1 point or were absent, \(E\) was initialized as 0.65 and \(E_h \) as 3 times \(E\) to reflect a sharper slope as trait values decline with increasing temperature. \(T_l\) was estimated as the lowest tempertaure and \(T_h\) as the maximum temperture.
-
-Apart from the cubic model, all models were fit in R Studio 3.2.3 using non-linear least squares methods. The nlsLM function was used to incorporate the Levenberg-Marquardt fitting algorithm, returning a vector of weighted residuals whose sum of square was minimized (R documentation). Parameters were bounded and optimized within the function. Estimated starting parameters for all 3 Schoolfield models were fitted and then randomized with a gaussian fluctuation before re-fitting. Each Schoolfield model was fitted to the TPC 20 times, once with the original estimated parameters and 19 times with starting values randomly sampled from a gaussian distribution with a mean of the calculated parameter and ditribution of 0.05. The convergence rate was recorded as the number of successful fits achieved out of a total of 20 attempts. 
+Apart from the cubic model, all models were fitted using non-linear least squares methods. The nlsLM function was used to incorporate the Levenberg-Marquardt fitting algorithm, returning a vector of weighted residuals whose sum of square was minimized \cite{minpack}. Parameters were bounded and optimized within the function. Estimated starting parameters for all 3 Schoolfield models were fitted and then randomized with a gaussian fluctuation before re-fitting. Each Schoolfield model was fitted to the TPC 20 times, once with the original estimated parameters and 19 times with starting values randomly sampled from a gaussian distribution with a mean of the calculated parameter and distribution of 0.05. The convergence rate was recorded as the number of successful fits achieved out of a total of 20 attempts. 
 
 \subsection{Model Selection}
 Models with the best fit for each individual TPC were defined as those with the lowest Akaike Information Criterion \(\Delta AIC_c\) score. \(AIC_c\), a second order derivative of the original \(AIC\), contains a bias correction term for small sample size and is suggested as an appropriate selection tool when the number of parameters exceed n/40, n referring to sample size \cite{article2}. \(AIC\) or \(AIC_c\) is often used to find the best approximating model to the unknown data as it accounts for the sum of squares, goodness-of-fit measure, and varying numbers of parameters \cite{citeulike:4425594}. The original \(AIC\) equation, used in calculating \(AIC_c\) is as follows;
@@ -128,7 +132,7 @@ where $\mathcal{L}(\hat{\theta}\mid y)$ is the log-likelihood at it's maximum po
 \begin{equation}
 AIC_c = AIC + \frac{2k(k+1)(k+2)}{max(n,k +3) - k - 2}\tag{7}
 \end{equation}
-
+\vspace{0.1cm}
 \(k\) is the number of parameters in the fitted model and \(n\) the number of observations. For phenomenological models which were not fit with varying starting parameters, the best model was taken as that with the lowest \(AIC_c\). When fitting the mechanistic models \(AIC_c\), was rescaled to \(\Delta AIC_c\) using the following equation;
 
 \begin{equation}
@@ -136,16 +140,25 @@ AIC_c = AIC + \frac{2k(k+1)(k+2)}{max(n,k +3) - k - 2}\tag{7}
 \end{equation}
 
 
-\( AIC_c \) \textunderscore i is the \(AIC_c\) for the ith model and \(AIC_c\)\textit{min} is the minimum \(AIC_c\) among all models. The larger \(\Delta_i\), the weaker the model. The best model was considered to be the model in which \(\Delta AIC\) was equal to 0 (minimum \(\Delta AIC\) score in the TPC) \cite{article3}. Each TPC was then plotted with the best selected fit per model and analyzed visually. An Akaike weight, W\textunderscore i ( \(AIC_c\) ), was used for model averaging, representing the probability that the model chosen is the best model for the observed data.
+\( AIC_c \) \textit{i} is the \(AIC_c\) for the $i^{\text{th}}$ model and \(AIC_c\)\textit{min} is the minimum \(AIC_c\) among all models. The larger the \(\Delta_i\), the weaker the model. The best model was considered to be the model in which \(\Delta AIC\) was equal to 0 (minimum \(\Delta AIC\) score in the TPC) \cite{article3}. Each TPC was then plotted with the best selected fit per model and analyzed visually. An Akaike weight, W\textit{i} ( \(AIC_c\) ), was used for model averaging, representing the probability that the model chosen is the best model for the observed data.
 
 \begin{equation}
 W_{\text{i}} = \frac{exp(-\Delta_i/2)}{\sum_{r = 1}^{R} exp(-\Delta_i/2))}\tag{9}
 \end{equation}
 
-W\textunderscore i is the weight of evidence in favour of the model. These depend on the full set of models and must sum to 1. R in the denominator incorporates the summation of all \(AIC_c\) weights to generate this ratio.
+W\textit{i} is the weight of evidence in favour of the model. These depend on the full set of models and must sum to 1. R in the denominator incorporates the summation of all \(AIC_c\) weights to generate this ratio.
+
+\subsection{Computing Languages}
+Python, R and bash were used to facilitate data wrangling, analysis, plotting and project compilation. The original dataset was cleaned and prepared for model fitting using Python 3.6.7 which included the NumPy \cite{numpy} and pandas \cite{Mckinney2011} libraries.
+
+R 3.4.4 \cite{R} was used for model fitting. Standard polynomial regression facilitated ordinary least squares fitting while non-linear least squares fitting was conducted using nlsLM from the minpack.lm package \cite{minpack}. Figure plotting packages included ggplot2 \cite{ggplot2}, xtable \cite{xtable}, dplyr \cite{dplyr}, plyr \cite{plyr}, gridExtra \cite{gridextra} and reshape2 \cite{reshape2}.
+
+Bash 4.4.19 was used to compile the project into a reproducible workflow with the writeup converted from \LaTeX to pdf.
+
+ 
 
 \section{Results}
-A total of 1,577 TPCs were analyzed following data manipulation. The sample size per TPC did not follow a normal distrbution, ranging from 6 to 637 samples with a median value of 8. 75\% of curves contained 13 values or less (see Appendix 1.1). Both phenomenological and mechanistic models fit the majority of the data, as seen in table 1, with Cubic and Briere fitting all curves compared to the Schoolfield models. Among the mechanistic models, those simplified with fewer parameters (S1 and S2) achieved a greater number of fits. Convergence was defined as the proportion of fits out of 20 attempts for each Schoolfield model. The high energy deactivation Schoolfield model (S1) converged more on average compared to the full Schoolfield model which had the lowest convergence rate.\\
+A total of 1,577 TPCs were analyzed following data manipulation. The sample size per TPC did not follow a normal distrbution, ranging from 6 to 637 samples with a median value of 8. 75\% of curves contained 13 values or less (see Appendices; Figure 1). Both phenomenological and mechanistic models fit the majority of the data, as seen in table 1, with Cubic and Briere fitting all curves compared to the Schoolfield models. Among the mechanistic models, those simplified with fewer parameters (S1 and S2) achieved a greater number of fits. Convergence was defined as the proportion of fits out of 20 attempts for each Schoolfield model. The high energy deactivation Schoolfield model (S1) converged more on average compared to the full Schoolfield model which had the lowest convergence rate.\\
 
 \begin{table}[H]
 \FloatBarrier
@@ -211,7 +224,7 @@ In figure 4, the general pattern of model performance between kingdoms of consum
 
 \begin{figure}[H]	\includegraphics[width=18cm, height=10cm]{../Results/Fig_4.pdf}
 	\centering
-	\caption{Proportion of  best models selected for each Kingdom of consumers. Best model was selected according to \(\Delta AIC_c\) score, within the entire dataset (n = 1577).}
+	\caption{Proportion of  best models selected for each Kingdom of consumers. Best model was selected according to \(\Delta AIC_c\) score, among consumers that had a Kingdom specified (n = 1576).}
 \end{figure}
 
 
@@ -220,7 +233,7 @@ The evidence for the strength of fit for each model was calculated by categorizi
 \vspace{0.7cm}
 \begin{table}[H]
 	\FloatBarrier
-	\caption{\(\Delta AIC_c\) scores TPCs in which all models converged.  Scores fall into respective categories as per the recommended guidelines. Categories represent strength of fit, with lower \(\Delta AIC_c\) indicative of supportive evidence in favour of the model (n = 1156).}
+	\caption{\(\Delta AIC_c\) scores for TPCs in which all models converged.  Scores fall into respective categories as per the recommended guidelines. Categories represent strength of fit, with lower \(\Delta AIC_c\) indicative of supportive evidence in favour of the model (n = 1156).}
 \begin{adjustbox}{height = 2.7cm, width=15cm}
 		\centering
 	\input{"../Results/Table3.tex"}
@@ -232,7 +245,7 @@ The evidence for the strength of fit for each model was calculated by categorizi
 
 
 \begin{figure}[H]
-	\includegraphics[width=10cm, height=10cm]{"../Results/Fig_5.pdf}
+	\includegraphics[width=13cm, height=12cm]{"../Results/Fig_5.pdf}
 	\centering
 	\caption{Distribution of Akaike weights for each model. Weightages were calculated for TPCs in which all models converged (n = 1156).}
 \end{figure}
@@ -252,18 +265,27 @@ Even in moderate sample sizes, the second order derivative \(AIC_c\) provides su
 
 
 \bibliographystyle{apacite}
-\bibliography{References.bib}
+\bibliography{../Writeup/References.bib}
 
 \end{linenumbers}
 
 \section{Appendices}
-\subsubsection{Appendix 1}
-\begin{figure}
-\includegraphics[width=0.98\textwidth]{"../Results/Samples_boxplot.pdf}
-\centering
-\caption{Boxlplot illustrating the range of observtions per Thermal Performance Curve. Outliers are labelled}
+
+ \setcounter{figure}{0}	
+ \begin{figure} [H]
+ 	\includegraphics[height = 12cm, width=10cm]{"../Results/Samples_boxplot.pdf}
+ 	\centering
+ 	\caption{Boxlplot illustrating the range of observations per Thermal Performance Curve. Outliers are labelled}
+ \end{figure}
+
+ \begin{figure} [H]
+	\includegraphics[height = 12cm, width=12cm]{"../Results/Appendix2.pdf}
+	\centering
+	\caption{Plot of \(AIC_c\) scores with sample size, coloured according to model type}
 \end{figure}
 
- 
+ 	\listoffigures
+ 	\listoftables
+
 
 \end{document}
