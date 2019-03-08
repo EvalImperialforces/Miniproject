@@ -7,7 +7,7 @@ This folder contains CMEE coursework relating to the Miniproject submission. All
 The '**Data**' folder comprises of data files used for analysis. '**Code**' contains code used to execute data wrangling, analysis and plotting. '**Results**' contains all plots and figures generated as part of the Miniproject assessment and '**Writeup**' contains .tex files and related materials used in producing the final report.
 
 
-###'**Code**' contains the following; 
+### '**Code**' contains the following; 
 
 1. 'run_MiniProject.sh'file
 This shell script runs all code and LaTeX scripts to reproduce the Miniproject from start to finish. Bash version 4.4.19 is used in running this script.
@@ -35,7 +35,7 @@ R version 3.4.4 is used.
 5. 'CompileLatex.sh' file
 This bash script compiles .tex documents from LaTeX into .pdf format while performing a clean-up of assitional unwanted outputs.
 
-###'**Data**' contains the following;
+### '**Data**' contains the following;
 
 1. 'BioTraits.csv' file
 Database containing standardized trait values, temperatures and other biologically relevant data that is wrangled before analysis.
@@ -47,7 +47,7 @@ The BioTraits dataset filtered and condensed, containing only data included in t
 Comma seperated file containing sample ID and related model outputs for plotting and analysis.
 
 
-###'Results' contains the following;
+### 'Results' contains the following;
 
 1. Models_fitted' folder
 Contains 1,577 figures generated from 'Plotting_analysis.R' in which models are fitted to each individual sample.
@@ -80,7 +80,7 @@ Contains 1,577 figures generated from 'Plotting_analysis.R' in which models are 
 .tex file that contains table 3 printed in final report.
 
 
-###'**Writeup**' contains the following;
+### '**Writeup**' contains the following;
 
 1. 'crest.png' file
 .png image used on coverpage of final report.
