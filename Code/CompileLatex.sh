@@ -10,11 +10,11 @@ filename="${file//.tex/}"
 mv $path/$filename* .
 
 # compile pdf, dont display standard out, but display standard error
-pdflatex $file # >/dev/null
-pdflatex $file # >/dev/null
-bibtex $filename # >/dev/null
-pdflatex $file  #>/dev/null
-pdflatex $file  #>/dev/null
+pdflatex $file  >/dev/null
+pdflatex $file  >/dev/null
+bibtex $filename  >/dev/null
+pdflatex $file  >/dev/null
+pdflatex $file  >/dev/null
 
 ## Cleanup
 rm *.aux
