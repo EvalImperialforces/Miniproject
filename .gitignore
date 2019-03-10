@@ -2,8 +2,8 @@
 Results/*
 
 # exception to the rule
-!Results/.gitkeep 
-!Models_fitted/.gitkeep
+!.gitkeep 
+
 
 *.aux
 *.toc
