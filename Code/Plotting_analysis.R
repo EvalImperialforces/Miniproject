@@ -164,7 +164,7 @@ IDlist = unique(Models$V1) # Unique list of IDs
 for (i in (1:length(IDlist))){
   #Plot created using Build_plot fuction and saved in results folder for each ID
   ID <- IDlist[i]
-  pdf(file = paste("../Results/Models_fitted/", ID,".pdf", sep = ""))
+  pdf(file = paste("../Results/", ID,".pdf", sep = ""))
   print(Build_plot(ID))
   dev.off()
 }
