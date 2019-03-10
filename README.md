@@ -91,8 +91,7 @@ Comma seperated file containing sample ID and related model outputs for plotting
 
 ### 'Results' contains the following;
 
-1. Models_fitted' folder
-Contains 1,577 figures generated from 'Plotting_analysis.R' in which models are fitted to each individual sample.
+1. 1,577 figures generated from 'Plotting_analysis.R' in which models are fitted to each individual sample.
 
 2. 'Appendix2.pdf' file
 .pdf file that contains figure 2 in the Appendix of the final report.
