@@ -14,7 +14,7 @@ echo "Fitting models ..."
 Rscript Model_fitting.R
 echo "Model fitting complete"
 echo "Plotting data ..."
-Rscript Plotting_analysis.R
+Rscript  Plotting_analysis.R
 echo "Plotting complete"
 
 rm *.pdf
