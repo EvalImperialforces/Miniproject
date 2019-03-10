@@ -3,6 +3,7 @@ Results/*
 
 # exception to the rule
 !Results/.gitkeep 
+!Results/Models_fitted/.gitkeep
 
 *.aux
 *.toc
@@ -11,3 +12,7 @@ Results/*
 *.log
 *.out
 *~
+*.gz
+*.pdf
+*.lot
+*.lof
